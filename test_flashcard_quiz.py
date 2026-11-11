@@ -36,5 +36,26 @@ class QuizTests(unittest.TestCase):
             self.assertEqual(load_deck(path), cards)
 
 
+class ShuffleTests(unittest.TestCase):
+    def test_shuffle_is_deterministic_with_seed(self):
+        from quiz import shuffle_cards
+
+        cards = [{"front": str(index), "back": str(index)} for index in range(10)]
+        self.assertEqual(shuffle_cards(cards, seed=7), shuffle_cards(cards, seed=7))
+
+    def test_shuffle_changes_order(self):
+        from quiz import shuffle_cards
+
+        cards = [{"front": str(index), "back": str(index)} for index in range(10)]
+        self.assertNotEqual(shuffle_cards(cards, seed=7), cards)
+
+    def test_shuffle_does_not_mutate_input(self):
+        from quiz import shuffle_cards
+
+        cards = add_card([], "2+2", "4")
+        shuffle_cards(cards, seed=1)
+        self.assertEqual(len(cards), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

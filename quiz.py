@@ -34,3 +34,12 @@ def score(cards, answers):
     if len(cards) != len(answers):
         raise ValueError("one answer per card is required")
     return sum(check(cards, index, answer) for index, answer in enumerate(answers))
+
+
+def shuffle_cards(cards, seed=None):
+    """Return a shuffled copy of cards. Seed makes the order deterministic."""
+    import random
+
+    shuffled = list(cards)
+    random.Random(seed).shuffle(shuffled)
+    return shuffled
