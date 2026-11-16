@@ -26,6 +26,11 @@ def add_card(cards, front, back):
     return cards
 
 
+def delete_card(cards, index):
+    cards.pop(index)
+    return cards
+
+
 def export_csv(cards, path):
     with open(path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)

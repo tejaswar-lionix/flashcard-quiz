@@ -6,6 +6,7 @@ import unittest
 from quiz import (
     add_card,
     check,
+    delete_card,
     export_csv,
     import_csv,
     load_deck,
@@ -45,6 +46,23 @@ class QuizTests(unittest.TestCase):
             cards = add_card([], "2+2", "4")
             save_deck(cards, path)
             self.assertEqual(load_deck(path), cards)
+
+
+class DeleteCardTests(unittest.TestCase):
+    def test_delete_middle_card(self):
+        cards = add_card(add_card(add_card([], "one", "1"), "two", "2"), "three", "3")
+        self.assertEqual(
+            [card["front"] for card in delete_card(cards, 1)],
+            ["one", "three"],
+        )
+
+    def test_delete_only_card(self):
+        cards = add_card([], "one", "1")
+        self.assertEqual(delete_card(cards, 0), [])
+
+    def test_delete_out_of_range_raises(self):
+        with self.assertRaises(IndexError):
+            delete_card([], 0)
 
 
 class CsvDeckTests(unittest.TestCase):
