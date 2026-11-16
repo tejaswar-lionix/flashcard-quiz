@@ -36,6 +36,21 @@ def score(cards, answers):
     return sum(check(cards, index, answer) for index, answer in enumerate(answers))
 
 
+def run_round(cards, answers):
+    if len(cards) != len(answers):
+        raise ValueError("one answer per card is required")
+    missed = [
+        card
+        for index, card in enumerate(cards)
+        if not check(cards, index, answers[index])
+    ]
+    return {"correct": len(cards) - len(missed), "total": len(cards), "missed": missed}
+
+
+def retry_queue(cards, answers):
+    return run_round(cards, answers)["missed"]
+
+
 def shuffle_cards(cards, seed=None):
     """Return a shuffled copy of cards. Seed makes the order deterministic."""
     import random
