@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from quiz import add_card, check, load_deck, save_deck, score
+from quiz import add_card, check, load_deck, retry_queue, run_round, save_deck, score
 
 
 class QuizTests(unittest.TestCase):
@@ -34,6 +34,29 @@ class QuizTests(unittest.TestCase):
             cards = add_card([], "2+2", "4")
             save_deck(cards, path)
             self.assertEqual(load_deck(path), cards)
+
+
+class RoundTests(unittest.TestCase):
+    def test_round_reports_correct_and_missed(self):
+        cards = add_card(add_card([], "2+2", "4"), "3+3", "6")
+        result = run_round(cards, ["4", "wrong"])
+        self.assertEqual(result["correct"], 1)
+        self.assertEqual(result["total"], 2)
+        self.assertEqual(len(result["missed"]), 1)
+        self.assertEqual(result["missed"][0]["front"], "3+3")
+
+    def test_retry_queue_returns_only_wrong_cards(self):
+        cards = add_card(add_card([], "2+2", "4"), "3+3", "6")
+        self.assertEqual(retry_queue(cards, ["wrong", "6"]), [cards[0]])
+
+    def test_retry_queue_empty_after_all_correct(self):
+        cards = add_card(add_card([], "2+2", "4"), "3+3", "6")
+        self.assertEqual(retry_queue(cards, ["4", "6"]), [])
+
+    def test_round_requires_matching_answer_count(self):
+        cards = add_card([], "2+2", "4")
+        with self.assertRaises(ValueError):
+            run_round(cards, [])
 
 
 class ShuffleTests(unittest.TestCase):
