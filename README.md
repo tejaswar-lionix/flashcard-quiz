@@ -6,6 +6,7 @@ Flashcards with answer checking, scoring, and shuffling.
 
 ```bash
 python3 -c "from quiz import *; c=add_card([], '2+2', '4'); print(score(c, ['4']))"
+python3 -c "from quiz import *; c=add_card([], '2+2', '4'); print(run_round(c, ['4']))"
 ```
 
 ## Features
@@ -13,6 +14,7 @@ python3 -c "from quiz import *; c=add_card([], '2+2', '4'); print(score(c, ['4']
 - Card creation with validated fields
 - Case-insensitive answer checking
 - Deterministic shuffling with shuffle_cards(cards, seed=...)
+- Rounds with run_round(cards, answers) and retry_queue(cards, answers)
 
 ## Tests
 
