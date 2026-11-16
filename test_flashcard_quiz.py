@@ -1,8 +1,19 @@
+import csv
 import os
 import tempfile
 import unittest
 
-from quiz import add_card, check, load_deck, retry_queue, run_round, save_deck, score
+from quiz import (
+    add_card,
+    check,
+    export_csv,
+    import_csv,
+    load_deck,
+    retry_queue,
+    run_round,
+    save_deck,
+    score,
+)
 
 
 class QuizTests(unittest.TestCase):
@@ -34,6 +45,33 @@ class QuizTests(unittest.TestCase):
             cards = add_card([], "2+2", "4")
             save_deck(cards, path)
             self.assertEqual(load_deck(path), cards)
+
+
+class CsvDeckTests(unittest.TestCase):
+    def test_export_import_roundtrip(self):
+        cards = add_card(add_card([], "2+2", "4"), "capital, France?", "Paris")
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "deck.csv")
+            export_csv(cards, path)
+            self.assertEqual(import_csv(path), cards)
+
+    def test_import_blank_cell_raises(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "deck.csv")
+            with open(path, "w", newline="", encoding="utf-8") as handle:
+                writer = csv.writer(handle)
+                writer.writerow(["front", "back"])
+                writer.writerow(["2+2", ""])
+            with self.assertRaises(ValueError):
+                import_csv(path)
+
+    def test_import_preserves_order(self):
+        cards = add_card(add_card(add_card([], "one", "1"), "two", "2"), "three", "3")
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "deck.csv")
+            export_csv(cards, path)
+            imported = import_csv(path)
+        self.assertEqual([card["front"] for card in imported], ["one", "two", "three"])
 
 
 class RoundTests(unittest.TestCase):
