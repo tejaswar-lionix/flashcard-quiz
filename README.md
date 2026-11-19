@@ -14,6 +14,7 @@ python3 -c "from quiz import *; export_csv(import_csv('deck.csv'), 'copy.csv')"
 ## Features
 
 - Card creation with validated fields
+- Card editing by index with edit_card(cards, index, front=None, back=None)
 - Card deletion by index with delete_card(cards, index)
 - Case-insensitive answer checking
 - Deterministic shuffling with shuffle_cards(cards, seed=...)

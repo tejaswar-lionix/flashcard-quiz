@@ -7,6 +7,7 @@ from quiz import (
     add_card,
     check,
     delete_card,
+    edit_card,
     export_csv,
     import_csv,
     load_deck,
@@ -46,6 +47,27 @@ class QuizTests(unittest.TestCase):
             cards = add_card([], "2+2", "4")
             save_deck(cards, path)
             self.assertEqual(load_deck(path), cards)
+
+
+class EditCardTests(unittest.TestCase):
+    def test_edit_both_fields(self):
+        cards = add_card([], "2+2", "4")
+        result = edit_card(cards, 0, front=" 3+3 ", back=" 6 ")
+        self.assertEqual(result[0]["front"], "3+3")
+        self.assertEqual(result[0]["back"], "6")
+
+    def test_edit_one_field_leaves_other_unchanged(self):
+        cards = add_card([], "2+2", "4")
+        edit_card(cards, 0, front=" 3+3 ")
+        self.assertEqual(cards[0]["front"], "3+3")
+        self.assertEqual(cards[0]["back"], "4")
+
+    def test_edit_blank_field_raises(self):
+        cards = add_card([], "2+2", "4")
+        with self.assertRaises(ValueError):
+            edit_card(cards, 0, front="   ")
+        with self.assertRaises(ValueError):
+            edit_card(cards, 0, back="")
 
 
 class DeleteCardTests(unittest.TestCase):
