@@ -26,6 +26,22 @@ def add_card(cards, front, back):
     return cards
 
 
+def edit_card(cards, index, front=None, back=None):
+    updates = {}
+    if front is not None:
+        front = front.strip()
+        if not front:
+            raise ValueError("front and back must not be empty")
+        updates["front"] = front
+    if back is not None:
+        back = back.strip()
+        if not back:
+            raise ValueError("front and back must not be empty")
+        updates["back"] = back
+    cards[index].update(updates)
+    return cards
+
+
 def delete_card(cards, index):
     cards.pop(index)
     return cards
