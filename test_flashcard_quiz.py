@@ -158,5 +158,22 @@ class ShuffleTests(unittest.TestCase):
         self.assertEqual(len(cards), 1)
 
 
+class SearchCardsTests(unittest.TestCase):
+    def test_matches_front_or_back(self):
+        from quiz import search_cards
+
+        cards = [
+            {"front": "capital of France", "back": "Paris"},
+            {"front": "2+2", "back": "4"},
+        ]
+        self.assertEqual(search_cards(cards, "paris"), [cards[0]])
+        self.assertEqual(search_cards(cards, "2+2"), [cards[1]])
+
+    def test_blank_query_returns_empty(self):
+        from quiz import search_cards
+
+        self.assertEqual(search_cards([{"front": "a", "back": "b"}], "  "), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -27,6 +27,10 @@ python3 -c "from quiz import *; export_csv(import_csv('deck.csv'), 'copy.csv')"
 python3 -m unittest -q
 ```
 
+## Additional API
+
+- `search_cards(cards, query)` finds cards by front or back text, case-insensitively.
+
 ## License
 
 MIT
