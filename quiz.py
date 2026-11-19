@@ -98,3 +98,15 @@ def shuffle_cards(cards, seed=None):
     shuffled = list(cards)
     random.Random(seed).shuffle(shuffled)
     return shuffled
+
+
+def search_cards(cards, query):
+    """Return cards whose front or back contains query, case-insensitively."""
+    needle = query.strip().lower()
+    if not needle:
+        return []
+    return [
+        card
+        for card in cards
+        if needle in card["front"].lower() or needle in card["back"].lower()
+    ]
